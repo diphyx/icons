@@ -1,0 +1,14 @@
+{
+    "name": "icons",
+    "version": "1.0.0",
+    "description": "A set of icons for DiPhyx projects",
+    "type": "module",
+    "scripts": {
+        "make": "node make.js"
+    },
+    "author": "Amir Reza Dalir <dalirnet@gmail.com>",
+    "license": "MIT",
+    "devDependencies": {
+        "@iconify/tools": "^4.1.1"
+    }
+}
