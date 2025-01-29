@@ -4,7 +4,8 @@
     "description": "A set of icons for DiPhyx projects",
     "type": "module",
     "scripts": {
-        "make": "node make.js"
+        "make": "node make.js",
+        "commit": "pnpm make && git add . && git commit -m 'feat: Update icons' && git push"
     },
     "author": "Amir Reza Dalir <dalirnet@gmail.com>",
     "license": "MIT",
