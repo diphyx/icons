@@ -4,15 +4,17 @@ import { importDirectory } from "@iconify/tools/lib/import/directory";
 import { cleanupSVG } from "@iconify/tools/lib/svg/cleanup";
 import { runSVGO } from "@iconify/tools/lib/optimise/svgo";
 
-const icons = await importDirectory("src");
+const icons = await importDirectory("src", {
+    ignoreImportErrors: true,
+});
 
 for (const name of icons.list()) {
-    const svg = icons.toSVG(name);
-    if (!svg) {
-        continue;
-    }
-
     try {
+        const svg = icons.toSVG(name);
+        if (!svg) {
+            continue;
+        }
+
         cleanupSVG(svg);
         runSVGO(svg);
 
