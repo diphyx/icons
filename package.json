@@ -1,15 +1,41 @@
 {
-    "name": "icons",
+    "name": "@diphyx/icons",
     "version": "1.0.0",
-    "description": "A set of icons for DiPhyx projects",
+    "description": "A set of icons for DiPhyx projects - Iconify compatible",
     "type": "module",
-    "scripts": {
-        "make": "node make.js",
-        "commit": "pnpm make && git add . && git commit -m 'feat: Update icons' && git push"
+    "main": "./icons/icons.json",
+    "exports": {
+        ".": "./icons/icons.json",
+        "./svg/*": "./icons/*.svg",
+        "./json": "./icons/icons.json"
     },
-    "author": "Amir Reza Dalir <dalirnet@gmail.com>",
+    "files": [
+        "icons",
+        "assets"
+    ],
+    "keywords": [
+        "icons",
+        "iconify",
+        "diphyx",
+        "svg"
+    ],
+    "scripts": {
+        "build": "tsx build.ts",
+        "type-check": "tsc --noEmit"
+    },
+    "author": "DiPhyx Team",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/diphyx/icons"
+    },
     "devDependencies": {
-        "@iconify/tools": "^4.1.1"
+        "@iconify/tools": "^4.1.1",
+        "@types/node": "^24.10.0",
+        "tsx": "^4.20.6",
+        "typescript": "^5.9.3"
+    },
+    "dependencies": {
+        "consola": "^3.4.2"
     }
 }
