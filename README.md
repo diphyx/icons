@@ -100,6 +100,35 @@ console.log(iconsData.icons); // All icons data
 console.log(iconsData.prefix); // "diphyx"
 ```
 
+### 5️⃣ Nuxt.js Integration
+
+```bash
+npm install @iconify/vue @diphyx/icons
+```
+
+Create `plugins/iconify.ts`:
+
+```typescript
+import { addCollection } from "@iconify/vue";
+import diphyxIcons from "@diphyx/icons";
+
+export default defineNuxtPlugin(() => {
+    addCollection(diphyxIcons);
+});
+```
+
+Use in components:
+
+```vue
+<template>
+    <Icon icon="diphyx:nodejs" width="32" />
+</template>
+
+<script setup>
+import { Icon } from "@iconify/vue";
+</script>
+```
+
 ---
 
 ## 📚 Available Icons
