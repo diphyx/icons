@@ -49,6 +49,151 @@ const ICON_PREFIX = "diphyx";
 const ICON_SIZE = 24;
 
 /**
+ * SVG presentation attributes: CSS properties that are also valid as plain
+ * attributes, so a <style> rule can be rewritten without losing meaning.
+ */
+const PRESENTATION_ATTRIBUTES = new Set([
+    "clip-path",
+    "clip-rule",
+    "color",
+    "color-interpolation",
+    "color-interpolation-filters",
+    "cursor",
+    "direction",
+    "display",
+    "dominant-baseline",
+    "fill",
+    "fill-opacity",
+    "fill-rule",
+    "filter",
+    "flood-color",
+    "flood-opacity",
+    "font-family",
+    "font-size",
+    "font-stretch",
+    "font-style",
+    "font-variant",
+    "font-weight",
+    "image-rendering",
+    "letter-spacing",
+    "lighting-color",
+    "marker-end",
+    "marker-mid",
+    "marker-start",
+    "mask",
+    "opacity",
+    "overflow",
+    "paint-order",
+    "pointer-events",
+    "shape-rendering",
+    "stop-color",
+    "stop-opacity",
+    "stroke",
+    "stroke-dasharray",
+    "stroke-dashoffset",
+    "stroke-linecap",
+    "stroke-linejoin",
+    "stroke-miterlimit",
+    "stroke-opacity",
+    "stroke-width",
+    "text-anchor",
+    "text-decoration",
+    "text-rendering",
+    "transform",
+    "transform-origin",
+    "vector-effect",
+    "visibility",
+    "word-spacing",
+    "writing-mode",
+]);
+
+/**
+ * Parse a CSS declaration list into property/value pairs.
+ */
+function parseDeclarations(text: string): Record<string, string> {
+    return text.split(";").reduce((accumulator, declaration) => {
+        const separator = declaration.indexOf(":");
+        if (separator === -1) {
+            return accumulator;
+        }
+
+        const property = declaration.slice(0, separator).trim();
+        const value = declaration.slice(separator + 1).trim();
+        if (property && value) {
+            accumulator[property] = value;
+        }
+
+        return accumulator;
+    }, {} as Record<string, string>);
+}
+
+/**
+ * Rewrite <style> rules and style="" attributes as presentation attributes,
+ * then strip every class and <style> element.
+ *
+ * A <style> element inside an inline SVG is not scoped to that SVG: it applies
+ * to the whole document. Icons rendered inline therefore collide on shared
+ * class names like .cls-1 and repaint each other. Presentation attributes carry
+ * the same styling as plain SVG, with no document-wide side effects.
+ */
+function flattenStyles(svg: SVG, name: string): void {
+    const $ = svg.$svg;
+    const rules = new Map<string, Record<string, string>>();
+
+    // Collect declarations per class name, in CSS source order
+    $("style").each((_, element) => {
+        const css = $(element).text();
+        const pattern = /([^{}]+)\{([^{}]*)\}/g;
+
+        for (const [, selectors, body] of css.matchAll(pattern)) {
+            const declarations = parseDeclarations(body);
+
+            for (const selector of selectors.split(",")) {
+                const match = selector.trim().match(/^\.([\w-]+)$/);
+                if (!match) {
+                    throw new Error(`Unsupported CSS selector "${selector.trim()}"`);
+                }
+
+                rules.set(match[1], {
+                    ...rules.get(match[1]),
+                    ...declarations,
+                });
+            }
+        }
+    });
+
+    $("style").remove();
+
+    // Apply the declarations as attributes, class rules first, then style=""
+    $("[class], [style]").each((_, element) => {
+        const $element = $(element);
+        const classes = ($element.attr("class") || "").split(/\s+/).filter(Boolean);
+        const declarations = classes.reduce(
+            (accumulator, className) => ({
+                ...accumulator,
+                ...rules.get(className),
+            }),
+            {} as Record<string, string>
+        );
+
+        Object.assign(declarations, parseDeclarations($element.attr("style") || ""));
+
+        for (const [property, value] of Object.entries(declarations)) {
+            if (!PRESENTATION_ATTRIBUTES.has(property)) {
+                consola.warn(`${name}.svg: dropped "${property}", not a presentation attribute`);
+
+                continue;
+            }
+
+            $element.attr(property, value);
+        }
+
+        $element.removeAttr("class");
+        $element.removeAttr("style");
+    });
+}
+
+/**
  * Scale and center an icon into a square ICON_SIZE viewBox.
  * Aspect ratio is preserved, so non-square source artwork is letterboxed
  * rather than distorted. Source files in assets/ are never modified.
@@ -148,8 +293,23 @@ async function build(): Promise<ProcessResult[]> {
                 }
 
                 cleanupSVG(svg);
+                flattenStyles(svg, name);
                 runSVGO(svg);
                 normalizeSize(svg);
+
+                // Nothing downstream should reintroduce document-wide styling
+                const body = svg.getBody();
+                const leaked = ["<style", "class=", "style="].find((token) => body.includes(token));
+                if (leaked) {
+                    errors.push({
+                        name,
+                        message: `Icon body still contains "${leaked}"`,
+                    });
+
+                    consola.error(`Processing failed: ${name}.svg - Icon body still contains "${leaked}"`);
+
+                    continue;
+                }
 
                 // Save individual SVG file
                 const outputPath = join(DIST_DIR, `${name}.svg`);
@@ -160,7 +320,7 @@ async function build(): Promise<ProcessResult[]> {
                 // Add to Iconify JSON
                 const viewBox = svg.viewBox;
                 const iconData: IconifyIcon = {
-                    body: svg.getBody(),
+                    body,
                 };
 
                 // Only include dimensions if different from default
