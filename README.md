@@ -37,7 +37,10 @@ yarn add @diphyx/icons
 Use icons directly from GitHub without installation!
 
 ```html
-<img src="https://raw.githubusercontent.com/diphyx/icons/main/icons/nodejs.svg" alt="Node.js" />
+<img
+    src="https://raw.githubusercontent.com/diphyx/icons/main/icons/nodejs.svg"
+    alt="Node.js"
+/>
 ```
 
 ---
@@ -83,10 +86,16 @@ No installation needed - use icons directly from GitHub:
 
 ```html
 <!-- Direct image usage -->
-<img src="https://raw.githubusercontent.com/diphyx/icons/main/icons/nodejs.svg" alt="Node.js" width="24" height="24" />
+<img
+    src="https://raw.githubusercontent.com/diphyx/icons/main/icons/nodejs.svg"
+    alt="Node.js"
+    width="24"
+    height="24"
+/>
 
 <!-- In CSS -->
-.icon { background-image: url('https://raw.githubusercontent.com/diphyx/icons/main/icons/python.svg'); }
+.icon { background-image:
+url('https://raw.githubusercontent.com/diphyx/icons/main/icons/python.svg'); }
 ```
 
 ### 4️⃣ Iconify JSON Format
@@ -171,8 +180,11 @@ pnpm run build
 This will:
 
 1. Import and optimize all SVG files from `assets/`
-2. Generate individual optimized SVG files in `icons/`
-3. Create `icons/icons.json` with Iconify format
+2. Normalize every icon to a `0 0 24 24` viewBox (uniform scale, centered, aspect ratio preserved)
+3. Generate individual optimized SVG files in `icons/`
+4. Create `icons/icons.json` with Iconify format
+
+Source files in `assets/` keep their original dimensions — normalization happens at build time only, so every icon in `icons/` and `icons.json` is a consistent 24×24.
 
 ### Type Checking
 
@@ -223,7 +235,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ### Adding New Icons
 
-1. Add your SVG file to `assets/` directory
+1. Add your SVG file to `assets/` directory (any viewBox — the build normalizes it to 24×24)
 2. Run `pnpm run build` to optimize
 3. Commit both source and built files
 4. Submit a PR

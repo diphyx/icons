@@ -1,5 +1,6 @@
 import { join } from "path";
 import { writeFile, mkdir, readdir } from "fs/promises";
+import { SVG } from "@iconify/tools/lib/svg";
 import { importDirectory } from "@iconify/tools/lib/import/directory";
 import { cleanupSVG } from "@iconify/tools/lib/svg/cleanup";
 import { runSVGO } from "@iconify/tools/lib/optimise/svgo";
@@ -45,6 +46,30 @@ type IconifyJSON = {
 const SRC_DIR = "assets";
 const DIST_DIR = "icons";
 const ICON_PREFIX = "diphyx";
+const ICON_SIZE = 24;
+
+/**
+ * Scale and center an icon into a square ICON_SIZE viewBox.
+ * Aspect ratio is preserved, so non-square source artwork is letterboxed
+ * rather than distorted. Source files in assets/ are never modified.
+ */
+function normalizeSize(svg: SVG): void {
+    const { left, top, width, height } = svg.viewBox;
+
+    if (left === 0 && top === 0 && width === ICON_SIZE && height === ICON_SIZE) {
+        return;
+    }
+
+    const round = (value: number): number => Math.round(value * 10000) / 10000;
+    const scale = ICON_SIZE / Math.max(width, height);
+    const x = round((ICON_SIZE - width * scale) / 2 - left * scale);
+    const y = round((ICON_SIZE - height * scale) / 2 - top * scale);
+    const transform = `translate(${x} ${y}) scale(${round(scale)})`;
+
+    svg.load(
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${ICON_SIZE}" height="${ICON_SIZE}" viewBox="0 0 ${ICON_SIZE} ${ICON_SIZE}"><g transform="${transform}">${svg.getBody()}</g></svg>`
+    );
+}
 
 async function build(): Promise<ProcessResult[]> {
     const errors: ProcessResult[] = [];
@@ -124,6 +149,7 @@ async function build(): Promise<ProcessResult[]> {
 
                 cleanupSVG(svg);
                 runSVGO(svg);
+                normalizeSize(svg);
 
                 // Save individual SVG file
                 const outputPath = join(DIST_DIR, `${name}.svg`);
