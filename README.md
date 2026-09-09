@@ -9,7 +9,8 @@
 
 ## ✨ Features
 
-- 🎨 **35+ carefully optimized SVG icons**
+- 🎨 **47 carefully optimized SVG icons**
+- 📐 **Uniform 24×24 viewBox** - Every icon scales and aligns identically
 - 📦 **Iconify JSON format** - Works seamlessly with Iconify ecosystem
 - 🚀 **Multiple usage methods** - npm, GitHub CDN, or direct import
 - ⚡ **Zero dependencies** - Optimized and minified SVG files
@@ -150,15 +151,21 @@ Browse the [`assets/`](./assets) directory to see all available icons. Each icon
 - Iconify: `diphyx:nodejs`
 - Direct: `icons/nodejs.svg`
 
+Every icon is normalized to a `0 0 24 24` viewBox, so they line up without per-icon sizing.
+
 ### Icon Categories
 
-- **Languages:** nodejs, python, php, go, js
-- **Development:** vscode, coder, jupyter, nginx
+- **Genomics:** blast, bwa, cutadapt, ensembl-vep, fastqc, igv, ivar, pangolin, samtools
+- **Molecular & Structural:** ambermd, cdk, gromacs, pymol, scipion
+- **Simulation:** lammps, odt, openfoam, su2, uintah-wasatch
+- **Visualization:** gimp, inkscape, paraview, visit
+- **Analytics & AI:** jupyter, knime, ollama, rstudio
+- **Languages:** go, js, nodejs, php, python
+- **Development:** coder, vscode
+- **Infrastructure:** filegator, nginx, s3, slurm
 - **Browsers:** chromium, firefox, vivaldi
 - **Linux:** debian, fedora, ubuntu, void
-- **Scientific:** gromacs, pymol, paraview, rstudio
-- **Communication:** telegram, signal
-- **And many more!**
+- **Communication:** signal, telegram
 
 ---
 
@@ -205,7 +212,7 @@ make build
 
 ```
 @diphyx/icons/
-├── assets/           # 📂 Source SVG files (unoptimized)
+├── assets/           # 📂 Source SVG files (unoptimized, original dimensions)
 ├── icons/            # 📦 Built and optimized icons (committed to git)
 │   ├── *.svg         # Individual optimized SVG files
 │   └── icons.json    # Iconify JSON format
