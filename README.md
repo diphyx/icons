@@ -9,7 +9,7 @@
 
 ## ✨ Features
 
-- 🎨 **78 carefully optimized SVG icons**
+- 🎨 **79 carefully optimized SVG icons**
 - 📐 **Uniform 24×24 viewBox** - Every icon scales and aligns identically
 - 📦 **Iconify JSON format** - Works seamlessly with Iconify ecosystem
 - 🚀 **Multiple usage methods** - npm, GitHub CDN, or direct import
@@ -152,9 +152,13 @@ Every icon is previewed below, grouped by category. Each icon name corresponds t
 
 #### Molecular & Structural
 
-| ![ambermd](https://raw.githubusercontent.com/diphyx/icons/main/icons/ambermd.svg) | ![avogadro](https://raw.githubusercontent.com/diphyx/icons/main/icons/avogadro.svg) | ![cdk](https://raw.githubusercontent.com/diphyx/icons/main/icons/cdk.svg) | ![gromacs](https://raw.githubusercontent.com/diphyx/icons/main/icons/gromacs.svg) | ![pymol](https://raw.githubusercontent.com/diphyx/icons/main/icons/pymol.svg) | ![scipion](https://raw.githubusercontent.com/diphyx/icons/main/icons/scipion.svg) |
+| ![ambermd](https://raw.githubusercontent.com/diphyx/icons/main/icons/ambermd.svg) | ![avogadro](https://raw.githubusercontent.com/diphyx/icons/main/icons/avogadro.svg) | ![cdk](https://raw.githubusercontent.com/diphyx/icons/main/icons/cdk.svg) | ![gabedit](https://raw.githubusercontent.com/diphyx/icons/main/icons/gabedit.svg) | ![gromacs](https://raw.githubusercontent.com/diphyx/icons/main/icons/gromacs.svg) | ![pymol](https://raw.githubusercontent.com/diphyx/icons/main/icons/pymol.svg) |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| `ambermd` | `avogadro` | `cdk` | `gromacs` | `pymol` | `scipion` |
+| `ambermd` | `avogadro` | `cdk` | `gabedit` | `gromacs` | `pymol` |
+
+| ![scipion](https://raw.githubusercontent.com/diphyx/icons/main/icons/scipion.svg) |
+| :---: |
+| `scipion` |
 
 #### Simulation
 
@@ -253,6 +257,7 @@ Every icon is previewed below, grouped by category. Each icon name corresponds t
 | ![filezilla](https://raw.githubusercontent.com/diphyx/icons/main/icons/filezilla.svg) |
 | :---: |
 | `filezilla` |
+
 ---
 
 ## 🛠️ Development
